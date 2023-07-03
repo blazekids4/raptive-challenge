@@ -18,6 +18,7 @@ module.exports = {
         rap3: "#ECB5D2",
         rap4: "#F7F7F2",
         rap5: "#5852EC",
+        rap6: "#D3FE66",
       },
       tremor: {
         brand: {

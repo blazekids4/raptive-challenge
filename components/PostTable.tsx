@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Post } from "@prisma/client";
+import { CSVLink, CSVDownload } from "react-csv";
 import {
   Card,
   Table,
@@ -19,6 +20,7 @@ interface PostTableProps {
 
 const PostTable: React.FC<PostTableProps> = () => {
   const [posts, setPosts] = useState([]);
+  const [csvData, setCsvData] = useState([]);
 
   const fetchDataFromDb = async () => {
     try {
@@ -27,6 +29,17 @@ const PostTable: React.FC<PostTableProps> = () => {
       if (response.ok) {
         const data = await response.json();
         setPosts(data); // Update the posts state with the data from the DB
+        setCsvData(
+          data.map((post) => ({
+            Id: post.id,
+            Title: post.title,
+            Privacy: post.privacy,
+            Likes: post.likes,
+            Views: post.views,
+            Comments: post.comments,
+            Created: new Date(post.timestamp).toLocaleDateString(),
+          }))
+        );
       } else {
         console.error("Error fetching data:", await response.text());
       }
@@ -39,16 +52,20 @@ const PostTable: React.FC<PostTableProps> = () => {
     fetchDataFromDb();
   }, []);
 
-  useEffect(() => {
-    // Fetch the posts when the component mounts
-    fetch("/api/uploads/getPosts")
-      .then((response) => response.json())
-      .then((data) => setPosts(data))
-      .catch((error) => console.error("Error fetching posts:", error));
-  }, []); // The empty array makes this run only on mount
-
   return (
     <div>
+      <div className="flex justify-between">
+        <Title className="text-rap4 underline">All Posts</Title>
+
+        <CSVLink
+          data={csvData}
+          filename={"top-posts.csv"}
+          className="text-rap1 text-sm font-semibold bg-rap4 rounded p-2 hover:bg-rap1 hover:text-rap4"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
+
       <Card>
         <Flex className="flex-col sm:flex-row">
           <Table className="mt-5 text-left divide-y divide-gray-200 w-full">

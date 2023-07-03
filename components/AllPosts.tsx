@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Post } from "@prisma/client";
+import { CSVLink, CSVDownload } from "react-csv";
+
 import {
   Card,
   Table,
@@ -19,6 +21,7 @@ interface AllPostsProps {
 
 const AllPosts: React.FC<AllPostsProps> = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [csvData, setCsvData] = useState([]);
 
   const fetchDataFromDb = async () => {
     try {
@@ -27,6 +30,17 @@ const AllPosts: React.FC<AllPostsProps> = () => {
       if (response.ok) {
         const data = await response.json();
         setPosts(data); // Update the posts state with the data from the DB
+        setCsvData(
+          data.map((post) => ({
+            Id: post.id,
+            Title: post.title,
+            Privacy: post.privacy,
+            Likes: post.likes,
+            Views: post.views,
+            Comments: post.comments,
+            Created: new Date(post.timestamp).toLocaleDateString(),
+          }))
+        );
       } else {
         console.error("Error fetching data:", await response.text());
       }
@@ -41,6 +55,17 @@ const AllPosts: React.FC<AllPostsProps> = () => {
 
   return (
     <div>
+      <div className="flex flex-wrap justify-between">
+        <Title className="text-rap4 underline">All Posts</Title>
+        <CSVLink
+          data={csvData}
+          filename={"all-posts.csv"}
+          className="text-rap1 text-sm font-semibold bg-rap4 rounded p-2 hover:bg-rap1 hover:text-rap4"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
+
       <Card>
         <Flex className="flex-col sm:flex-row">
           <Table className="mt-5 text-left divide-y divide-gray-200 w-full">
@@ -77,7 +102,11 @@ const AllPosts: React.FC<AllPostsProps> = () => {
                       {post.id}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap max-w-sm">
-                      <Text className="text-sm text-rap5">{post.title}</Text>
+                      <Text className="text-sm text-rap5">
+                        {post.title.length > 50
+                          ? post.title.substring(0, 50) + "..."
+                          : post.title}
+                      </Text>
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
                       {post.privacy}

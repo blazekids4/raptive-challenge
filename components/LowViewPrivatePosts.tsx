@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Post } from "@prisma/client";
+import { CSVLink } from "react-csv";
+
 import {
   Card,
   Table,
@@ -19,6 +21,7 @@ interface LowViewPrivateProps {
 
 const LowViewPrivate: React.FC<LowViewPrivateProps> = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [csvData, setCsvData] = useState([]);
 
   const fetchDataFromDb = async () => {
     try {
@@ -30,6 +33,18 @@ const LowViewPrivate: React.FC<LowViewPrivateProps> = () => {
           .sort((a, b) => a.views - b.views)
           .slice(0, 50);
         setPosts(filteredPosts);
+        const csvData = filteredPosts.map((post) => ({
+          Id: post.id,
+          Title: post.title,
+          Privacy: post.privacy,
+          Likes: post.likes,
+          Views: post.views,
+          Comments: post.comments,
+          Created: new Date(post.timestamp).toLocaleDateString(),
+        }));
+
+        // Set the csvData state
+        setCsvData(csvData);
       } else {
         console.error("Error fetching data:", await response.text());
       }
@@ -44,9 +59,19 @@ const LowViewPrivate: React.FC<LowViewPrivateProps> = () => {
 
   return (
     <div>
+      <div className="flex justify-between">
+        <Title className="text-rap4 underline">Low View Private Posts</Title>
+        <CSVLink
+          data={csvData}
+          filename={"love-view-private.csv"}
+          className="text-rap1 text-sm font-semibold bg-rap4 rounded p-2 hover:bg-rap1 hover:text-rap4"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
       <Card>
         <Flex className="flex-col sm:flex-row">
-          <Table className="mt-5 text-left divide-y divide-gray-200 w-full">
+          <Table className="mt-5 text-left divide-y divide-gray-200 w-full overflow-x-auto">
             <TableHead>
               <TableRow>
                 <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -80,7 +105,11 @@ const LowViewPrivate: React.FC<LowViewPrivateProps> = () => {
                       {post.id}
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap max-w-sm">
-                      <Text className="text-sm text-rap5">{post.title}</Text>
+                      <Text className="text-sm text-rap5">
+                        {post.title.length > 50
+                          ? post.title.substring(0, 50) + "..."
+                          : post.title}
+                      </Text>
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
                       {post.privacy}

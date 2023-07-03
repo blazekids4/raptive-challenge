@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
+
 import {
   Card,
   Table,
@@ -22,6 +24,7 @@ interface Post {
 
 const HighScoreDailyPosts: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [csvData, setCsvData] = useState([]);
 
   const fetchDataFromDb = async () => {
     try {
@@ -29,6 +32,16 @@ const HighScoreDailyPosts: React.FC = () => {
       if (response.ok) {
         const data: Post[] = await response.json();
         setPosts(data);
+        // Transform posts data into CSV format
+        const csvData = data.map((post) => ({
+          Id: post.id,
+          Title: post.title,
+          Likes: post.likes,
+          Created: new Date(post.timestamp).toLocaleDateString(),
+        }));
+
+        // Set the csvData state
+        setCsvData(csvData);
       } else {
         console.error("Error fetching data:", await response.text());
       }
@@ -43,6 +56,17 @@ const HighScoreDailyPosts: React.FC = () => {
 
   return (
     <div>
+      <div className="flex justify-between">
+        <Title className="text-rap4 underline">High Score Daily Posts</Title>
+        <CSVLink
+          data={csvData}
+          filename={"high-score-daily-posts.csv"}
+          className="text-rap1 text-sm font-semibold bg-rap4 rounded p-2 hover:bg-rap1 hover:text-rap4"
+        >
+          Export to CSV
+        </CSVLink>
+      </div>
+
       <Card>
         <Flex className="flex-col sm:flex-row">
           <Table className="mt-5 text-left divide-y divide-gray-200 w-full">
@@ -50,9 +74,6 @@ const HighScoreDailyPosts: React.FC = () => {
               <TableRow>
                 <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Title
-                </TableHeaderCell>
-                <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-sm">
-                  Content
                 </TableHeaderCell>
                 <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Likes
@@ -66,11 +87,12 @@ const HighScoreDailyPosts: React.FC = () => {
               {posts.map((post, index) => {
                 return (
                   <TableRow key={index}>
-                    <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                      <Text className="text-sm text-rap5">{post.title}</Text>
-                    </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap max-w-sm">
-                      {post.content}
+                      <Text className="text-sm text-rap5">
+                        {post.title.length > 50
+                          ? post.title.substring(0, 50) + "..."
+                          : post.title}
+                      </Text>
                     </TableCell>
                     <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
                       {post.likes}
