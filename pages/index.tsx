@@ -3,7 +3,6 @@ import AllPosts from "../components/AllPosts";
 import TopPosts from "../components/TopPosts";
 import LowViewPrivate from "../components/LowViewPrivatePosts";
 import HighScoreDailyPosts from "../components/HighScoreDailyPosts";
-import UploadForm from "../components/csvUpload";
 
 import {
   Card,

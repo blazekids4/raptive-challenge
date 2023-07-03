@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Post } from "@prisma/client";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 import {
   Card,
