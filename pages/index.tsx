@@ -3,6 +3,7 @@ import AllPosts from "../components/AllPosts";
 import TopPosts from "../components/TopPosts";
 import LowViewPrivate from "../components/LowViewPrivatePosts";
 import HighScoreDailyPosts from "../components/HighScoreDailyPosts";
+import UploadForm from "../components/csvUpload";
 
 import {
   Card,
@@ -25,6 +26,7 @@ export default function Home() {
           <h1 className="text-4xl text-rap4">Hello Raptive</h1>
           <p className="text-xl ml-3 text-rap4">Let&apos;s Party</p>
         </div>
+        <div className="flex flex-col items-center m-4 py-2"></div>
 
         <Card className="m-4 items-left">
           <TabGroup>
