@@ -22,6 +22,7 @@
     "@types/react-dom": "18.2.6",
     "@vercel/analytics": "^0.1.11",
     "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
     "csv": "^6.3.1",
     "csv-parse": "^5.4.0",
     "eslint-config-next": "13.4.7",

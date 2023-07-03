@@ -1,25 +1,13 @@
 import Papa from "papaparse"; //https://medium.com/how-to-react/how-to-parse-or-read-csv-files-in-reactjs-81e8ee4870b0
 import { useState, useEffect } from "react";
-import {
-  Card,
-  Table,
-  TableHead,
-  TableRow,
-  TableHeaderCell,
-  TableBody,
-  TableCell,
-  Text,
-  Title,
-  Flex,
-} from "@tremor/react";
+import { Card, Title } from "@tremor/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// Add this import for creating tab functionality
 
 export default function UploadForm() {
   const [parsedData, setParsedData] = useState([]);
-  //State to store table Column name
   const [tableRows, setTableRows] = useState([]);
-  //State to store the values
   const [values, setValues] = useState([]);
   const [posts, setPosts] = useState([]);
   const notifySuccess = () => toast.success("Data uploaded successfully!");
@@ -112,7 +100,7 @@ export default function UploadForm() {
     <>
       <ToastContainer />
       <Card className="mx-3 sm:p-3 overflow-auto">
-        <div className="flex flex-col min-h-screen py-2 sm:ml-4">
+        <div className="flex flex-col  py-2 sm:ml-4">
           {/* Display loading state */}
           {isUploading ? <p className="text-rap4">Uploading...</p> : null}
           <input
@@ -126,72 +114,10 @@ export default function UploadForm() {
           <label
             htmlFor="file"
             className="cursor-pointer bg-rap1 hover:bg-rap4 hover:text-rap1 text-rap4 font-bold py-2 px-4 rounded"
+            style={{ width: "200px" }}
           >
-            1. Upload CSV File
+            Upload CSV File
           </label>
-          <br />
-          <br />
-          <Title className="text-rap4 font-bold py-2 px-4 rounded bg-rap1">
-            2. Enjoy Post Data
-          </Title>
-          <Flex className="flex-col sm:flex-row">
-            <Table className="mt-5 text-left divide-y divide-gray-200 w-full">
-              <TableHead>
-                <TableRow>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Id
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-w-sm">
-                    Title
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Privacy
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Likes
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Views
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Comments
-                  </TableHeaderCell>
-                  <TableHeaderCell className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Created
-                  </TableHeaderCell>
-                </TableRow>
-              </TableHead>
-              <TableBody className="bg-white divide-y divide-gray-200">
-                {posts.map((post, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.id}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap max-w-sm">
-                        <Text className="text-sm text-rap5">{post.title}</Text>
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.privacy}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.likes}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.views}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.comments}
-                      </TableCell>
-                      <TableCell className="px-6 py-4 text-sm text-rap5 whitespace-nowrap">
-                        {post.timestamp}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Flex>
         </div>
       </Card>
     </>

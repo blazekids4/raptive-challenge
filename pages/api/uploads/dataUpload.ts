@@ -24,18 +24,11 @@ export default async function dataUpload(req: NextApiRequest, res: NextApiRespon
           timestamp: new Date(item.timestamp),
         };
 
-        try {
-          await prisma.post.create({
-            data: processedItem,
-          });
-        } catch (error) {
-          if (error.code === 'P2002' && error.meta?.target?.includes('id')) {
-            console.log(`Post with ID ${processedItem.id} already exists. Skipping.`);
-            continue;
-          } else {
-            throw error;
-          }
-        }
+        await prisma.post.upsert({
+          where: { id: processedItem.id }, // Specify the post to update
+          update: processedItem, // If the post exists, update it
+          create: processedItem, // If the post doesn't exist, create it
+        });
       }
 
       // If successful, return a 200 status with a success message
