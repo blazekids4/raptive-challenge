@@ -1,5 +1,4 @@
 import { Inter } from "next/font/google";
-import UploadForm from "../components/csvUpload";
 import AllPosts from "../components/AllPosts";
 import TopPosts from "../components/TopPosts";
 import LowViewPrivate from "../components/LowViewPrivatePosts";
